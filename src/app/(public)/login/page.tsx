@@ -96,7 +96,7 @@ export default function Login() {
           <div className="flex items-center justify-center">
             <button
               type="submit"
-              className="bg-green-500 text-blue-950 font-bold py-3 w-full rounded-md flex justify-center items-center gap-3 hover:bg-green-700 transition-all duration-100 ease-in-out"
+              className="bg-green-500 text-blue-950 font-bold py-3 w-full rounded-md flex justify-center items-center gap-3 hover:bg-green-700 transition-all duration-100 ease-in-out cursor-pointer"
             >
               Continue <FaAngleRight />
             </button>
