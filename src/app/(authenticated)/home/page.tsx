@@ -1,11 +1,16 @@
+"use client";
+
 import Header from "@/components/Header";
 import React from "react";
 import Image from "next/image";
-
-import userPhoto from "@/assets/home/userPhoto.png";
 import AccountsBank from "@/components/Home/AccountsBank";
 
+import userPhoto from "@/assets/home/userPhoto.png";
+import { useUser } from "@/hooks/useUser";
+
 export default function Home() {
+  const { user, loading, error, greeting } = useUser();
+
   return (
     <div className="flex flex-col w-full">
       <Header
@@ -14,8 +19,18 @@ export default function Home() {
         actionBtn={
           <div className="flex items-center justify-center gap-2">
             <div className="flex flex-col items-end">
-              <span className="text-xl text-slate-100">Good Morning,</span>
-              <span className="text-2xl font-bold text-zinc-50">User Name</span>
+              {loading ? (
+                <span className="text-xl text-slate-100">Loading...</span>
+              ) : error ? (
+                <span className="text-xl text-red-500">Error</span>
+              ) : (
+                <>
+                  <span className="text-xl text-slate-100">{greeting},</span>
+                  <span className="text-2xl font-bold text-zinc-50">
+                    {user?.name || "User"}
+                  </span>
+                </>
+              )}
             </div>
             <Image src={userPhoto} alt="User photo" />
           </div>
