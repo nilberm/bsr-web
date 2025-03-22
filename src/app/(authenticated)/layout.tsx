@@ -1,4 +1,5 @@
 import Sidebar from "@/components/Siderbar";
+import { BalanceVisibilityProvider } from "@/context/BalanceVisibilityContext";
 import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -16,9 +17,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex w-full min-h-screen bg-slate-200">
-          <Sidebar /> {children}
-        </div>
+        <BalanceVisibilityProvider>
+          <div className="flex w-full min-h-screen bg-slate-200">
+            <Sidebar /> {children}
+          </div>
+        </BalanceVisibilityProvider>
       </body>
     </html>
   );

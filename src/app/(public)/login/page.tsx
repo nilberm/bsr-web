@@ -2,15 +2,10 @@
 
 import Image from "next/image";
 import logo_full from "../../../assets/logo/logo_full.svg";
-
 import { FaAngleRight } from "react-icons/fa6";
-
 import { SubmitHandler, useForm } from "react-hook-form";
 import Link from "next/link";
-import { useState } from "react";
-import { api } from "@/services/api";
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { useLogin } from "@/hooks/useLogin";
 
 interface Inputs {
   email: string;
@@ -18,43 +13,15 @@ interface Inputs {
 }
 
 export default function Login() {
-  const router = useRouter();
-
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<Inputs>();
-
-  const [loading, setLoading] = useState(false);
-
-  const storeToken = async (token: string) => {
-    try {
-      localStorage.setItem("jwtToken", token);
-    } catch (error) {
-      console.error("Error to storage Token");
-    }
-  };
+  const { login, loading } = useLogin();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    setLoading(true);
-
-    const request = {
-      email: data.email,
-      password: data.password,
-    };
-
-    await api
-      .post("login", request)
-      .then((res) => {
-        storeToken(res.data.access_token);
-        router.push("/home");
-      })
-      .catch((error) => {
-        toast.error(error?.response?.data?.message);
-      })
-      .finally(() => setLoading(false));
+    login(data);
   };
 
   return (
@@ -97,8 +64,15 @@ export default function Login() {
             <button
               type="submit"
               className="bg-green-500 text-blue-950 font-bold py-3 w-full rounded-md flex justify-center items-center gap-3 hover:bg-green-700 transition-all duration-100 ease-in-out cursor-pointer"
+              disabled={loading}
             >
-              Continue <FaAngleRight />
+              {loading ? (
+                "Loading..."
+              ) : (
+                <>
+                  Continue <FaAngleRight />
+                </>
+              )}
             </button>
           </div>
         </form>

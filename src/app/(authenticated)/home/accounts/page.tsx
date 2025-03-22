@@ -1,7 +1,7 @@
 "use client";
 
 import Header from "@/components/Header";
-import AccountInfo from "@/components/Home/AccountInfo";
+import AccountInfo from "@/components/Home/Accounts/AccountInfo";
 import { useAccounts } from "@/hooks/useAccounts";
 
 export default function Accounts() {

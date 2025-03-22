@@ -3,10 +3,11 @@
 import Header from "@/components/Header";
 import React from "react";
 import Image from "next/image";
-import AccountsBank from "@/components/Home/AccountsBank";
+import AccountsBank from "@/components/Home/Accounts/AccountsBank";
 
 import userPhoto from "@/assets/home/userPhoto.png";
 import { useUser } from "@/hooks/useUser";
+import CardList from "@/components/Home/Cards/CardsList";
 
 export default function Home() {
   const { user, loading, error, greeting } = useUser();
@@ -36,8 +37,9 @@ export default function Home() {
           </div>
         }
       />
-      <div className="flex flex-col w-full p-8">
+      <div className="flex flex-col w-full p-8 gap-4">
         <AccountsBank />
+        <CardList />
       </div>
     </div>
   );

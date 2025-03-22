@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { useAccounts, Account } from "@/hooks/useAccounts";
 import { useRouter } from "next/navigation";
 import { FaEye, FaEyeSlash, FaWallet } from "react-icons/fa6";
+import { useBalanceVisibility } from "@/context/BalanceVisibilityContext";
 
 export default function AccountsBank() {
   const router = useRouter();
-  const [showBalance, setShowBalance] = useState(true);
+  const { showBalance, toggleBalance } = useBalanceVisibility();
   const { accounts, totalBalance, loading, error } = useAccounts();
 
   if (loading) return <p>Carregando...</p>;
@@ -28,7 +28,7 @@ export default function AccountsBank() {
         <button
           type="button"
           className="text-gray-500 hover:text-gray-700 cursor-pointer"
-          onClick={() => setShowBalance(!showBalance)}
+          onClick={() => toggleBalance()}
         >
           {showBalance ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
         </button>
