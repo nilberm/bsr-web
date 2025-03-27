@@ -4,7 +4,7 @@ import { api } from "@/services/api";
 export interface Account {
   id: string;
   name: string;
-  initialBalance: string;
+  balance: string;
   isDefault: boolean;
   createdAt: string;
   updatedAt: string;
@@ -16,29 +16,29 @@ export const useAccounts = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchAccounts = async () => {
+  const fetchAccounts = () => {
     setLoading(true);
     setError(null);
-    try {
-      const response = await api.get<Account[]>("/accounts");
 
-      const sortedAccounts = response.data.sort((a, b) => {
-        return b.isDefault ? 1 : -1;
-      });
+    api
+      .get<Account[]>("/accounts")
+      .then((response) => {
+        const sortedAccounts = response.data.sort((a, b) =>
+          b.isDefault ? 1 : -1
+        );
+        setAccounts(sortedAccounts);
 
-      setAccounts(sortedAccounts);
-
-      const total = sortedAccounts.reduce((sum, account) => {
-        return sum + parseFloat(account.initialBalance);
-      }, 0);
-
-      setTotalBalance(total);
-    } catch (err) {
-      setError("Error fetching accounts");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+        const total = sortedAccounts.reduce(
+          (sum, account) => sum + parseFloat(account.balance),
+          0
+        );
+        setTotalBalance(total);
+      })
+      .catch((err) => {
+        setError("Error fetching accounts");
+        console.error(err);
+      })
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {

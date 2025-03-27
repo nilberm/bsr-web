@@ -37,7 +37,9 @@ export default function AccountsBank() {
       <div className="flex flex-col gap-3">
         {accounts.map((account: Account, index: number) => (
           <div key={account.id} className="w-full">
-            <p className="text-sm font-semibold text-zinc-900">{account.name}</p>
+            <p className="text-sm font-semibold text-zinc-900">
+              {account.name}
+            </p>
 
             <div className="flex justify-between items-center mt-1">
               <div className="flex items-center gap-2">
@@ -50,7 +52,9 @@ export default function AccountsBank() {
               </div>
 
               <span className="text-blue-600 font-bold text-xl">
-                {showBalance ? `R$ ${parseFloat(account.initialBalance).toFixed(2)}` : "•••••"}
+                {showBalance
+                  ? `R$ ${parseFloat(account.balance).toFixed(2)}`
+                  : "•••••"}
               </span>
             </div>
 

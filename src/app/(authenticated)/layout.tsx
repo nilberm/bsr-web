@@ -17,11 +17,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <BalanceVisibilityProvider>
-          <div className="flex w-full min-h-screen bg-slate-200">
+        <div className="flex w-full min-h-screen bg-slate-200">
+          <BalanceVisibilityProvider>
             <Sidebar /> {children}
-          </div>
-        </BalanceVisibilityProvider>
+          </BalanceVisibilityProvider>
+        </div>
       </body>
     </html>
   );
