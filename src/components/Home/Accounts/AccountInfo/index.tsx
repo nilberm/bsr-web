@@ -1,9 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { FaAngleRight, FaPen, FaWallet } from "react-icons/fa6";
 import ModalAccountEditBalance from "../ModalAccountEditBalance";
-
 
 interface AccountProps {
   id: string;
@@ -32,12 +32,14 @@ export default function AccountInfo({ account, refetch }: AccountInfoProps) {
           </div>
         </div>
 
-        <button
-          type="button"
-          className="text-2xl p-2 rounded-full transition-all hover:bg-gray-300"
-        >
-          <FaAngleRight />
-        </button>
+        <Link href={`/home/accounts/${account.id}`}>
+          <button
+            type="button"
+            className="text-2xl p-2 rounded-full transition-all hover:bg-gray-300"
+          >
+            <FaAngleRight />
+          </button>
+        </Link>
       </div>
 
       {/* Account Balance */}
