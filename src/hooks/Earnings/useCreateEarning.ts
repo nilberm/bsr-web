@@ -1,5 +1,5 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/services/api";
+import { useMutation } from "@tanstack/react-query";
 
 interface CreateEarningData {
   description: string;
@@ -16,7 +16,7 @@ export function useCreateEarning(onSuccessCallback?: () => void) {
       onSuccessCallback?.();
     },
     onError: (error) => {
-      console.error("Erro ao criar ganho:", error);
+      console.error("Error while creating earning:", error);
     },
   });
 

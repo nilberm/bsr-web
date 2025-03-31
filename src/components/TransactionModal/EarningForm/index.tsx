@@ -1,8 +1,9 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useCreateEarning } from "@/hooks/Earnings/useCreateEarning";
 import { toast } from "react-toastify";
+import { CategorySelectModal } from "@/components/CategorySelectModal";
 
 type EarningFormInputs = {
   description: string;
@@ -22,6 +23,7 @@ export default function EarningForm({ onSuccess }: EarningFormProps) {
     handleSubmit,
     formState: { errors },
     reset,
+    control,
   } = useForm<EarningFormInputs>();
 
   const { createEarning, loading } = useCreateEarning(() => {
@@ -74,11 +76,18 @@ export default function EarningForm({ onSuccess }: EarningFormProps) {
       </div>
 
       <div>
-        <label className="block mb-1">Category ID</label>
-        <input
-          type="text"
-          {...register("categoryId", { required: true })}
-          className="w-full p-2 border rounded"
+        <label className="block mb-1">Category</label>
+        <Controller
+          control={control}
+          name="categoryId"
+          rules={{ required: true }}
+          render={({ field }) => (
+            <CategorySelectModal
+              type="income"
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
         />
         {errors.categoryId && (
           <span className="text-red-500">This field is required</span>
