@@ -1,40 +1,33 @@
 import { useForm } from "react-hook-form";
-import Modal from "@/components/Modal";
+import Modal from "@/components/ui/Modal";
 import { FaCheck } from "react-icons/fa6";
-import { useCreateAccount } from "@/hooks/Accounts/useCreateAccount";
+import { useEditAccountBalance } from "@/hooks/Accounts/useEditAccountBalance";
 
-interface ModalAccountCreationProps {
+interface ModalAccountEditBalanceProps {
   open: boolean;
   onCancel: () => void;
-  refetch?: () => void;
+  accountId: string;
 }
 
-interface AccountFormValues {
-  name: string;
+interface AccountBalanceFormValues {
   balance: number;
-  type: string;
 }
 
-export default function ModalAccountCreation({
-  onCancel,
+export default function ModalAccountEditBalance({
   open,
-  refetch,
-}: ModalAccountCreationProps) {
+  onCancel,
+  accountId,
+}: ModalAccountEditBalanceProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<AccountFormValues>({
-    defaultValues: {
-      name: "",
-      balance: 0,
-      type: "checking",
-    },
-  });
+  } = useForm<AccountBalanceFormValues>();
 
-  const { createAccount, loading } = useCreateAccount(refetch);
+  const { editBalance, loading } = useEditAccountBalance(onCancel);
 
-  const onSubmit = (data: AccountFormValues) => createAccount(data, onCancel);
+  const onSubmit = (data: AccountBalanceFormValues) =>
+    editBalance({ accountId, balance: data.balance });
 
   return (
     <Modal open={open} onCancel={onCancel}>
@@ -43,27 +36,10 @@ export default function ModalAccountCreation({
           className="flex flex-col items-center justify-center w-full h-full gap-4"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <h1 className="text-2xl font-semibold">Create new Account</h1>
+          <h1 className="text-2xl font-semibold">Edit Account Balance</h1>
 
           <label className="w-full">
-            <span className="text-gray-700 text-lg">Account Name</span>
-            <input
-              type="text"
-              {...register("name", {
-                required: "Name is required",
-                minLength: 3,
-              })}
-              className="p-3 w-full border border-gray-300 rounded-md mt-1"
-            />
-            {errors.name && (
-              <p className="text-red-500 text-sm">{errors.name.message}</p>
-            )}
-          </label>
-
-          <label className="w-full">
-            <span className="text-gray-700 text-lg">
-              Set your current balance
-            </span>
+            <span className="text-gray-700 text-lg">New Balance</span>
             <input
               type="number"
               step="0.01"
@@ -77,8 +53,6 @@ export default function ModalAccountCreation({
               <p className="text-red-500 text-sm">{errors.balance.message}</p>
             )}
           </label>
-
-          <input type="hidden" {...register("type")} value="checking" />
 
           <button
             type="submit"

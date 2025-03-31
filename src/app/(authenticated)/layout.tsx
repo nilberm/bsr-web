@@ -1,7 +1,7 @@
 import { Inter } from "next/font/google";
-import Sidebar from "@/components/Siderbar";
 import { BalanceVisibilityProvider } from "@/context/BalanceVisibilityContext";
 import QueryProvider from "@/providers/QueryProvider";
+import Sidebar from "@/components/shared/Siderbar";
 
 const inter = Inter({ subsets: ["latin"] });
 

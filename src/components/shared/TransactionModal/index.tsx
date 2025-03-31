@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Modal from "../Modal";
 import EarningForm from "./EarningForm";
 import ExpenseForm from "./ExpenseForm";
+import Modal from "@/components/ui/Modal";
 
 interface TransactionModalProps {
   open: boolean;

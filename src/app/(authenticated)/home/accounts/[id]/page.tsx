@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { api } from "@/services/api";
-import Header from "@/components/Header";
+import Header from "@/components/shared/Header";
 import { FaEdit, FaWallet } from "react-icons/fa";
 import { Account } from "@/types/account";
 import { FiSave } from "react-icons/fi";
@@ -36,7 +36,7 @@ export default function AccountDetailPage() {
   const handleSave = async () => {
     try {
       await api.put(`/accounts/${accountId}`, { name: editedName });
-      setAccount((prev) => prev ? { ...prev, name: editedName } : prev);
+      setAccount((prev) => (prev ? { ...prev, name: editedName } : prev));
       setIsEditing(false);
     } catch (error) {
       console.error("Failed to update account:", error);

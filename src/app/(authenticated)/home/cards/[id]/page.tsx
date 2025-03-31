@@ -1,6 +1,6 @@
 "use client";
 
-import Header from "@/components/Header";
+import Header from "@/components/shared/Header";
 import { api } from "@/services/api";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";

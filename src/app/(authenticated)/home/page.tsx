@@ -1,13 +1,13 @@
 "use client";
 
-import Header from "@/components/Header";
+import Header from "@/components/shared/Header";
 import React from "react";
 import Image from "next/image";
-import AccountsBank from "@/components/Home/Accounts/AccountsBank";
+import AccountsBank from "@/components/features/accounts/AccountsBank";
 
 import userPhoto from "@/assets/home/userPhoto.png";
 import { useUser } from "@/hooks/useUser";
-import CardList from "@/components/Home/Cards/CardsList";
+import CardList from "@/components/features/cards/CardsList";
 
 export default function Home() {
   const { user, loading, error, greeting } = useUser();

@@ -1,11 +1,11 @@
 "use client";
 
-import Header from "@/components/Header";
-import AccountInfo from "@/components/Home/Accounts/AccountInfo";
-import ModalAccountCreation from "@/components/Home/Accounts/ModalAccountCreation";
+import Header from "@/components/shared/Header";
+import ModalAccountCreation from "@/components/features/accounts/ModalAccountCreation";
 import { useAccounts } from "@/hooks/Accounts/useAccounts";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa6";
+import AccountInfo from "@/components/features/accounts/AccountInfo";
 
 export default function Accounts() {
   const { accounts, loading, error, refetch } = useAccounts();

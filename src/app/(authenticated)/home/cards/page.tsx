@@ -1,8 +1,8 @@
 "use client";
 
-import Header from "@/components/Header";
-import CardInfo from "@/components/Home/Cards/CardInfo";
-import ModalCardCreation from "@/components/Home/Cards/ModalCardCreation";
+import Header from "@/components/shared/Header";
+import CardInfo from "@/components/features/cards/CardInfo";
+import ModalCardCreation from "@/components/features/cards/ModalCardCreation";
 
 import { useCards } from "@/hooks/Cards/useCards";
 import { useState } from "react";

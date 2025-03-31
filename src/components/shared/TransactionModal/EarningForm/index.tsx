@@ -3,7 +3,7 @@
 import { useForm, Controller } from "react-hook-form";
 import { useCreateEarning } from "@/hooks/Earnings/useCreateEarning";
 import { toast } from "react-toastify";
-import { CategorySelectModal } from "@/components/CategorySelectModal";
+import { CategorySelectModal } from "@/components/shared/CategorySelectModal";
 
 type EarningFormInputs = {
   description: string;

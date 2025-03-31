@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Modal from "../Modal";
 
 import { Category, useCategories } from "@/hooks/Categories/useCategories";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/Button";
+import Modal from "@/components/ui/Modal";
 
 interface CategorySelectModalProps {
   type: "income" | "expense";
