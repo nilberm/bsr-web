@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import CardInfo from "@/components/Home/Cards/CardInfo";
 import ModalCardCreation from "@/components/Home/Cards/ModalCardCreation";
 
-import { useCards } from "@/hooks/useCards";
+import { useCards } from "@/hooks/Cards/useCards";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 

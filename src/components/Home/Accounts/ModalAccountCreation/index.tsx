@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import Modal from "@/components/Modal";
 import { FaCheck } from "react-icons/fa6";
-import { useCreateAccount } from "@/hooks/useCreateAccount";
+import { useCreateAccount } from "@/hooks/Accounts/useCreateAccount";
 
 interface ModalAccountCreationProps {
   open: boolean;

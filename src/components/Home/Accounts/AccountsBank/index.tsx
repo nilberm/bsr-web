@@ -1,6 +1,6 @@
 "use client";
 
-import { useAccounts, Account } from "@/hooks/useAccounts";
+import { useAccounts, Account } from "@/hooks/Accounts/useAccounts";
 import { useRouter } from "next/navigation";
 import { FaEye, FaEyeSlash, FaWallet } from "react-icons/fa6";
 import { useBalanceVisibility } from "@/context/BalanceVisibilityContext";

@@ -1,12 +1,11 @@
 import { useForm } from "react-hook-form";
 import Modal from "@/components/Modal";
 import { FaCheck } from "react-icons/fa6";
-import { useEditAccountBalance } from "@/hooks/useEditAccountBalance";
+import { useEditAccountBalance } from "@/hooks/Accounts/useEditAccountBalance";
 
 interface ModalAccountEditBalanceProps {
   open: boolean;
   onCancel: () => void;
-  refetch?: () => void;
   accountId: string;
 }
 
@@ -17,7 +16,6 @@ interface AccountBalanceFormValues {
 export default function ModalAccountEditBalance({
   open,
   onCancel,
-  refetch,
   accountId,
 }: ModalAccountEditBalanceProps) {
   const {
@@ -26,10 +24,10 @@ export default function ModalAccountEditBalance({
     formState: { errors },
   } = useForm<AccountBalanceFormValues>();
 
-  const { editBalance, loading } = useEditAccountBalance(refetch);
+  const { editBalance, loading } = useEditAccountBalance(onCancel);
 
   const onSubmit = (data: AccountBalanceFormValues) =>
-    editBalance(accountId, data.balance, onCancel);
+    editBalance({ accountId, balance: data.balance });
 
   return (
     <Modal open={open} onCancel={onCancel}>

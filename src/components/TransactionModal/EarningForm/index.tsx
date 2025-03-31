@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useCreateEarning } from "@/hooks/useCreateEarning";
+import { useCreateEarning } from "@/hooks/Earnings/useCreateEarning";
 import { toast } from "react-toastify";
 
 type EarningFormInputs = {
@@ -24,14 +24,14 @@ export default function EarningForm({ onSuccess }: EarningFormProps) {
     reset,
   } = useForm<EarningFormInputs>();
 
-  const { createEarning, loading } = useCreateEarning();
+  const { createEarning, loading } = useCreateEarning(() => {
+    toast.success("Earning successfully added!");
+    reset();
+    onSuccess();
+  });
 
   const onSubmit = (data: EarningFormInputs) => {
-    createEarning(data, () => {
-      toast.success("Earning successfully added!");
-      reset();
-      onSuccess();
-    });
+    createEarning(data);
   };
 
   return (

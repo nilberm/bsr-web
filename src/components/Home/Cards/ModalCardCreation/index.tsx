@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useCreateCard } from "@/hooks/useCreateCard";
+import { useCreateCard } from "@/hooks/Cards/useCreateCard";
 import Modal from "@/components/Modal";
 
 interface Inputs {
@@ -29,13 +29,13 @@ export default function ModalCardCreation({
     formState: { errors },
   } = useForm<Inputs>();
 
-  const { createCard, loading, displayValue, handleChange } = useCreateCard();
+  const { createCard, loading, displayValue, handleChange } = useCreateCard(() => {
+    refetch();
+    onCancel();
+  });
 
   const onSubmit = (data: Inputs) => {
-    createCard(data, () => {
-      refetch();
-      onCancel();
-    });
+    createCard(data);
   };
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, useCards } from "@/hooks/useCards";
+import { Card, useCards } from "@/hooks/Cards/useCards";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FaCreditCard } from "react-icons/fa6";

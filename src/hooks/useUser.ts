@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { api } from "@/services/api";
 
 interface User {
@@ -8,24 +8,16 @@ interface User {
 }
 
 export function useUser() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await api.get<User>("/users/me");
-        setUser(response.data);
-      } catch (_err) {
-        setError("Failed to load user data");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, []);
+  const { data: user, isLoading, isError } = useQuery<User>({
+    queryKey: ["user"],
+    queryFn: () =>
+      api
+        .get<User>("/users/me")
+        .then((res) => res.data)
+        .catch(() => {
+          throw new Error("Failed to load user data");
+        }),
+  });
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -35,5 +27,10 @@ export function useUser() {
     return "Good Night";
   };
 
-  return { user, loading, error, greeting: getGreeting() };
+  return {
+    user,
+    loading: isLoading,
+    error: isError ? "Failed to load user data" : null,
+    greeting: getGreeting(),
+  };
 }
