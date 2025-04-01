@@ -64,7 +64,6 @@ export default function AccountInfo({ account, refetch }: AccountInfoProps) {
       <ModalAccountEditBalance
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
-        refetch={refetch}
         accountId={account.id}
       />
     </section>

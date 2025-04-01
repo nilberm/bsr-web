@@ -49,7 +49,6 @@ export default function Accounts() {
             <ModalAccountCreation
               open={isModalVisible}
               onCancel={() => setModalVisible(false)}
-              refetch={refetch}
             />
           </div>
         )}

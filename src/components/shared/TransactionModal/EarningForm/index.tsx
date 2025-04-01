@@ -4,13 +4,24 @@ import { useForm, Controller } from "react-hook-form";
 import { useCreateEarning } from "@/hooks/Earnings/useCreateEarning";
 import { toast } from "react-toastify";
 import { CategorySelectModal } from "@/components/shared/CategorySelectModal";
+import { AccountSelectModal } from "@/components/shared/AccountSelectModal";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/Button";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
 
 type EarningFormInputs = {
   description: string;
   amount: number;
   accountId: string;
   categoryId: string;
-  date?: string;
+  date?: Date;
 };
 
 interface EarningFormProps {
@@ -33,7 +44,12 @@ export default function EarningForm({ onSuccess }: EarningFormProps) {
   });
 
   const onSubmit = (data: EarningFormInputs) => {
-    createEarning(data);
+    const payload = {
+      ...data,
+      date: data.date ? data.date.toISOString() : undefined,
+    };
+
+    createEarning(payload);
   };
 
   return (
@@ -64,11 +80,14 @@ export default function EarningForm({ onSuccess }: EarningFormProps) {
       </div>
 
       <div>
-        <label className="block mb-1">Account ID</label>
-        <input
-          type="text"
-          {...register("accountId", { required: true })}
-          className="w-full p-2 border rounded"
+        <label className="block mb-1">Account</label>
+        <Controller
+          control={control}
+          name="accountId"
+          rules={{ required: true }}
+          render={({ field }) => (
+            <AccountSelectModal value={field.value} onChange={field.onChange} />
+          )}
         />
         {errors.accountId && (
           <span className="text-red-500">This field is required</span>
@@ -96,10 +115,39 @@ export default function EarningForm({ onSuccess }: EarningFormProps) {
 
       <div>
         <label className="block mb-1">Date (optional)</label>
-        <input
-          type="datetime-local"
-          {...register("date")}
-          className="w-full p-2 border rounded"
+        <Controller
+          control={control}
+          name="date"
+          render={({ field }) => (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start text-left font-normal"
+                  type="button"
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {field.value ? (
+                    format(field.value, "PPPp")
+                  ) : (
+                    <span>Pick a date</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                onMouseDown={(e) => e.stopPropagation()}
+                className="w-auto p-0 z-[10000]"
+              >
+                <Calendar
+                  mode="single"
+                  selected={field.value}
+                  onSelect={field.onChange}
+                  initialFocus
+                  showOutsideDays={false}
+                />
+              </PopoverContent>
+            </Popover>
+          )}
         />
       </div>
 

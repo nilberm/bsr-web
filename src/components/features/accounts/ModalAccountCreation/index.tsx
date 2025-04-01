@@ -6,7 +6,6 @@ import { useCreateAccount } from "@/hooks/Accounts/useCreateAccount";
 interface ModalAccountCreationProps {
   open: boolean;
   onCancel: () => void;
-  refetch?: () => void;
 }
 
 interface AccountFormValues {
@@ -18,7 +17,6 @@ interface AccountFormValues {
 export default function ModalAccountCreation({
   onCancel,
   open,
-  refetch,
 }: ModalAccountCreationProps) {
   const {
     register,
@@ -32,9 +30,11 @@ export default function ModalAccountCreation({
     },
   });
 
-  const { createAccount, loading } = useCreateAccount(refetch);
+  const { createAccount, loading } = useCreateAccount(onCancel);
 
-  const onSubmit = (data: AccountFormValues) => createAccount(data, onCancel);
+  const onSubmit = (data: AccountFormValues) => {
+    createAccount(data);
+  };
 
   return (
     <Modal open={open} onCancel={onCancel}>
@@ -51,7 +51,7 @@ export default function ModalAccountCreation({
               type="text"
               {...register("name", {
                 required: "Name is required",
-                minLength: 3,
+                minLength: { value: 3, message: "Minimum 3 characters" },
               })}
               className="p-3 w-full border border-gray-300 rounded-md mt-1"
             />

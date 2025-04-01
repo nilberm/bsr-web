@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 
 import { Category, useCategories } from "@/hooks/Categories/useCategories";
-import { Button } from "@/components/ui/Button";
+
 import Modal from "@/components/ui/Modal";
+import { Button } from "@/components/ui/Button";
 
 interface CategorySelectModalProps {
   type: "income" | "expense";
@@ -27,7 +28,7 @@ export const CategorySelectModal: React.FC<CategorySelectModalProps> = ({
 
   return (
     <>
-      <Button variant="outline" onClick={() => setOpen(true)}>
+      <Button variant="outline" onClick={() => setOpen(true)} type="button">
         {selectedCategory ? selectedCategory.name : "Select category"}
       </Button>
 
@@ -48,6 +49,7 @@ export const CategorySelectModal: React.FC<CategorySelectModalProps> = ({
                   variant={category.id === value ? "default" : "outline"}
                   className="w-full justify-start"
                   onClick={() => handleSelect(category)}
+                  type="button"
                 >
                   {category.name}
                 </Button>

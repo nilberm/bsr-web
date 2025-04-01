@@ -22,7 +22,7 @@ export default function TransactionModal({
     selectedTab === "expense" ? "bg-red-500" : "bg-green-500";
 
   return (
-    <Modal open={open} onCancel={onCancel} width="w-[60rem]">
+    <Modal open={open} onCancel={onCancel} width="w-[50rem]">
       <div className={`rounded-t-lg ${backgroundClass} text-white`}>
         <div className="flex justify-around px-6 pt-6 border-b border-white/30">
           <button
