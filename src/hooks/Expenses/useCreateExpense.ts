@@ -4,9 +4,13 @@ import { useMutation } from "@tanstack/react-query";
 interface CreateExpenseData {
   description: string;
   amount: number;
-  accountId: string;
+  accountId?: string;
+  cardId?: string;
   categoryId: string;
   date?: string;
+  type: "fixed" | "installments";
+  installments?: number;
+  recurrence?: "one-time" | "monthly";
 }
 
 export function useCreateExpense(onSuccessCallback?: () => void) {

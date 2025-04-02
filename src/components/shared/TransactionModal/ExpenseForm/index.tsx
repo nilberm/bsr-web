@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { useCreateExpense } from "@/hooks/Expenses/useCreateExpense";
 import { toast } from "react-toastify";
 import { CategorySelectModal } from "@/components/shared/CategorySelectModal";
@@ -15,13 +15,18 @@ import { Button } from "@/components/ui/Button";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import { CardSelectModal } from "../../CardSelectModal";
 
 type ExpenseFormInputs = {
   description: string;
   amount: number;
-  accountId: string;
+  accountId?: string;
+  cardId?: string;
   categoryId: string;
   date?: Date;
+  type: "fixed" | "installments";
+  installments?: number;
+  recurrence?: "one-time" | "monthly";
 };
 
 interface ExpenseFormProps {
@@ -35,7 +40,15 @@ export default function ExpenseForm({ onSuccess }: ExpenseFormProps) {
     formState: { errors },
     reset,
     control,
-  } = useForm<ExpenseFormInputs>();
+    setValue,
+  } = useForm<ExpenseFormInputs>({
+    defaultValues: {
+      type: "fixed",
+      recurrence: "one-time",
+    },
+  });
+
+  const type = useWatch({ control, name: "type" });
 
   const { createExpense, loading } = useCreateExpense(() => {
     toast.success("Expense successfully added!");
@@ -44,6 +57,11 @@ export default function ExpenseForm({ onSuccess }: ExpenseFormProps) {
   });
 
   const onSubmit = (data: ExpenseFormInputs) => {
+    if (!data.accountId && !data.cardId) {
+      toast.error("Please select either an account or a card.");
+      return;
+    }
+
     const payload = {
       ...data,
       date: data.date ? data.date.toISOString() : undefined,
@@ -80,18 +98,74 @@ export default function ExpenseForm({ onSuccess }: ExpenseFormProps) {
       </div>
 
       <div>
-        <label className="block mb-1">Account</label>
-        <Controller
-          control={control}
-          name="accountId"
-          rules={{ required: true }}
-          render={({ field }) => (
-            <AccountSelectModal value={field.value} onChange={field.onChange} />
+        <label className="block mb-1">Type</label>
+        <select
+          {...register("type", { required: true })}
+          className="w-full p-2 border rounded"
+        >
+          <option value="fixed">Fixed</option>
+          <option value="installments">Installments</option>
+        </select>
+      </div>
+
+      {type === "installments" && (
+        <div>
+          <label className="block mb-1">Installments</label>
+          <input
+            type="number"
+            {...register("installments", { required: true, min: 1 })}
+            className="w-full p-2 border rounded"
+          />
+          {errors.installments && (
+            <span className="text-red-500">Must be at least 1</span>
           )}
-        />
-        {errors.accountId && (
-          <span className="text-red-500">This field is required</span>
-        )}
+        </div>
+      )}
+
+      {type === "fixed" && (
+        <div>
+          <label className="block mb-1">Recurrence</label>
+          <select
+            {...register("recurrence")}
+            className="w-full p-2 border rounded"
+          >
+            <option value="one-time">One-time</option>
+            <option value="monthly">Monthly</option>
+          </select>
+        </div>
+      )}
+
+      <div>
+        <label className="block mb-1">Account (or Card)</label>
+        <div className="flex gap-4">
+          <Controller
+            control={control}
+            name="accountId"
+            render={({ field }) => (
+              <AccountSelectModal
+                value={field.value}
+                onChange={(value) => {
+                  field.onChange(value);
+                  setValue("cardId", undefined);
+                }}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="cardId"
+            render={({ field }) => (
+              <CardSelectModal
+                value={field.value}
+                onChange={(value) => {
+                  field.onChange(value);
+                  setValue("accountId", undefined); 
+                }}
+              />
+            )}
+          />
+        </div>
       </div>
 
       <div>
