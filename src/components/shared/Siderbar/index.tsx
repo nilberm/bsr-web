@@ -21,7 +21,7 @@ export default function Sidebar() {
 
   return (
     <>
-      <aside className="bg-zinc-50 shadow-[4px_1px_4px_0px_rgba(0,0,0,0.25)] flex flex-col p-8 px-6 justify-between gap-4 w-70">
+      <aside className="bg-zinc-50 shadow-[4px_1px_4px_0px_rgba(0,0,0,0.25)] flex flex-col p-8 px-6 justify-between gap-4 w-70 z-50">
         <div className="h-[6%]">
           <Image src={logo} alt="logo" className="w-full" />
         </div>

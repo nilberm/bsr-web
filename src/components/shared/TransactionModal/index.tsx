@@ -48,7 +48,7 @@ export default function TransactionModal({
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-b-lg">
+      <div className="rounded-b-lg">
         {selectedTab === "expense" ? (
           <ExpenseForm onSuccess={onCancel}/>
         ) : (
