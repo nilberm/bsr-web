@@ -1,21 +1,21 @@
 "use client";
 
-import { useForm, Controller, useWatch } from "react-hook-form";
-import { useCreateExpense } from "@/hooks/Expenses/useCreateExpense";
-import { toast } from "react-toastify";
-import { CategorySelectModal } from "@/components/shared/CategorySelectModal";
 import { AccountSelectModal } from "@/components/shared/AccountSelectModal";
+import { CategorySelectModal } from "@/components/shared/CategorySelectModal";
+import { Button } from "@/components/ui/Button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Button } from "@/components/ui/Button";
-import { format, addMonths } from "date-fns";
+import { useCreateExpense } from "@/hooks/Expenses/useCreateExpense";
+import { addMonths, format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import { CardSelectModal } from "../../CardSelectModal";
 import { useEffect, useState } from "react";
+import { Controller, useForm, useWatch } from "react-hook-form";
+import { toast } from "react-toastify";
+import { CardSelectModal } from "../../CardSelectModal";
 
 type ExpenseFormInputs = {
   description: string;
@@ -51,11 +51,10 @@ export default function ExpenseForm({ onSuccess }: ExpenseFormProps) {
 
   const type = useWatch({ control, name: "type" });
   const recurrence = useWatch({ control, name: "recurrence" });
-  const date = useWatch({ control, name: "date" });
   const amount = useWatch({ control, name: "amount" });
   const installments = useWatch({ control, name: "installments" });
 
-  const [monthsCount, setMonthsCount] = useState<number>(3); // default
+  const [monthsCount, setMonthsCount] = useState<number>(3);
 
   const { createExpense, loading } = useCreateExpense(() => {
     toast.success("Expense successfully added!");

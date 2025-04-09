@@ -1,4 +1,8 @@
+"use client";
+
+import { useState } from "react";
 import { format, isToday, isYesterday } from "date-fns";
+import ExpenseDetailModal from "@/components/shared/ExpenseDetailModal";
 
 type Transaction = {
   id: string;
@@ -26,6 +30,10 @@ type Props = {
 };
 
 export default function TransactionList({ transactions }: Props) {
+  const [selectedExpenseId, setSelectedExpenseId] = useState<string | null>(
+    null
+  );
+
   const grouped = transactions.reduce<Record<string, Transaction[]>>(
     (acc, tx) => {
       const date = new Date(tx.date);
@@ -41,7 +49,6 @@ export default function TransactionList({ transactions }: Props) {
 
       if (!acc[label]) acc[label] = [];
       acc[label].push(tx);
-      console.log(acc);
       return acc;
     },
     {}
@@ -51,7 +58,9 @@ export default function TransactionList({ transactions }: Props) {
     <div className="flex flex-col bg-zinc-50">
       {Object.entries(grouped).map(([dateLabel, group]) => (
         <div key={dateLabel} className="px-4 py-2">
-          <p className="text-sm text-slate-700 font-medium mb-2">{dateLabel}</p>
+          <p className="text-sm text-slate-700 font-medium mb-2">
+            {dateLabel}
+          </p>
 
           <div className="flex flex-col divide-y">
             {group.map((transaction) => {
@@ -68,7 +77,10 @@ export default function TransactionList({ transactions }: Props) {
               return (
                 <div
                   key={transaction.id}
-                  className="flex items-center justify-between py-3"
+                  onClick={() =>
+                    isExpense ? setSelectedExpenseId(transaction.id) : null
+                  }
+                  className="flex items-center justify-between py-3 cursor-pointer hover:bg-zinc-100 transition-colors rounded"
                 >
                   <div className="flex items-center gap-3">
                     {/* Category icon placeholder */}
@@ -101,6 +113,12 @@ export default function TransactionList({ transactions }: Props) {
           </div>
         </div>
       ))}
+
+      <ExpenseDetailModal
+        open={!!selectedExpenseId}
+        onClose={() => setSelectedExpenseId(null)}
+        expenseId={selectedExpenseId ?? ""}
+      />
     </div>
   );
 }

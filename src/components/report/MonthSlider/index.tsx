@@ -5,17 +5,32 @@ import dayjs from "dayjs";
 import clsx from "clsx";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useDrag } from "@use-gesture/react";
+import { useReportRange } from "@/hooks/Report/useReportRange";
 
-const MONTHS = generateMonths("2025-02", "2026-02");
+type MonthItem = {
+  label: string; // "April 2025"
+  month: number; // 1-12
+  year: number;
+  key: string; // "2025-04"
+};
 
-function generateMonths(start: string, end: string) {
+function generateMonths(start: string, end: string): MonthItem[] {
   const startDate = dayjs(start);
   const endDate = dayjs(end);
-  const months: string[] = [];
+  const currentYear = dayjs().year();
+  const months: MonthItem[] = [];
 
   let current = startDate;
   while (current.isBefore(endDate) || current.isSame(endDate, "month")) {
-    months.push(current.format("MMMM"));
+    months.push({
+      label:
+        current.year() === currentYear
+          ? current.format("MMMM")
+          : current.format("MMMM YYYY"),
+      month: current.month() + 1,
+      year: current.year(),
+      key: current.format("YYYY-MM"),
+    });
     current = current.add(1, "month");
   }
 
@@ -25,34 +40,43 @@ function generateMonths(start: string, end: string) {
 export default function MonthSlider({
   onChange,
 }: {
-  onChange: (monthIndex: number) => void;
+  onChange: (month: number, year: number) => void;
 }) {
-  const currentMonthIndex = MONTHS.findIndex(
-    (m) => m === dayjs().format("MMMM")
-  );
-
-  const [selectedIndex, setSelectedIndex] = useState(
-    currentMonthIndex !== -1 ? currentMonthIndex : 0
-  );
+  const { data, isLoading } = useReportRange();
+  const [months, setMonths] = useState<MonthItem[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  // Centraliza o mês selecionado
   useEffect(() => {
-    onChange(selectedIndex);
+    if (data?.start && data?.end) {
+      const generated = generateMonths(data.start, data.end);
+      setMonths(generated);
 
-    const selectedItem = itemRefs.current[selectedIndex];
-    if (selectedItem) {
-      selectedItem.scrollIntoView({
-        behavior: "smooth",
-        inline: "center",
-        block: "nearest",
-      });
+      const current = dayjs();
+      const currentIndex = generated.findIndex(
+        (m) => m.month === current.month() + 1 && m.year === current.year()
+      );
+      setSelectedIndex(currentIndex !== -1 ? currentIndex : 0);
     }
-  }, [selectedIndex]);
+  }, [data]);
 
-  // Hook para permitir drag com mouse e touch
+  useEffect(() => {
+    if (months.length > 0) {
+      onChange(months[selectedIndex].month, months[selectedIndex].year);
+
+      const selectedItem = itemRefs.current[selectedIndex];
+      if (selectedItem) {
+        selectedItem.scrollIntoView({
+          behavior: "smooth",
+          inline: "center",
+          block: "nearest",
+        });
+      }
+    }
+  }, [selectedIndex, months, onChange]);
+
   useDrag(
     ({ down, movement: [mx], memo }) => {
       const container = containerRef.current;
@@ -75,6 +99,12 @@ export default function MonthSlider({
     }
   );
 
+  if (isLoading) {
+    return (
+      <div className="text-center text-gray-500 py-4">Loading months...</div>
+    );
+  }
+
   return (
     <div className="flex items-center justify-between bg-zinc-50 px-4 py-2">
       <button
@@ -92,9 +122,9 @@ export default function MonthSlider({
           msOverflowStyle: "none",
         }}
       >
-        {MONTHS.map((month, index) => (
+        {months.map((month, index) => (
           <button
-            key={month}
+            key={month.key}
             ref={(el) => {
               itemRefs.current[index] = el;
             }}
@@ -106,14 +136,14 @@ export default function MonthSlider({
                 : "text-slate-600 hover:text-zinc-800"
             )}
           >
-            {month}
+            {month.label}
           </button>
         ))}
       </div>
 
       <button
         onClick={() =>
-          setSelectedIndex((prev) => Math.min(prev + 1, MONTHS.length - 1))
+          setSelectedIndex((prev) => Math.min(prev + 1, months.length - 1))
         }
         className="text-zinc-600 hover:text-zinc-900"
       >
