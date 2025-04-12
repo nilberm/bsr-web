@@ -5,6 +5,7 @@ export interface Card {
   id: string;
   name: string;
   limit: string;
+  currentLimit: string;
   closingDay: number;
   dueDay: number;
   createdAt: string;

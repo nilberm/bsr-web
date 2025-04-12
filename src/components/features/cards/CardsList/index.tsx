@@ -6,6 +6,7 @@ import { useState } from "react";
 import { FaCreditCard } from "react-icons/fa6";
 import ModalCardCreation from "../ModalCardCreation";
 import { useBalanceVisibility } from "@/context/BalanceVisibilityContext";
+import { useCardMonthlyTotals } from "@/hooks/Report/useCardMonthlyTotals";
 
 export default function CardList() {
   const router = useRouter();
@@ -14,6 +15,15 @@ export default function CardList() {
   const [showModal, setShowModal] = useState(false);
 
   const today = new Date().getDate();
+  const currentMonth = new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
+
+  const cardIds = cards.map((card) => card.id);
+  const { totals: cardTotals } = useCardMonthlyTotals(
+    cardIds,
+    currentMonth,
+    currentYear
+  );
 
   if (loading) return <p>Carregando...</p>;
   if (error) return <p>{error}</p>;
@@ -72,15 +82,31 @@ export default function CardList() {
                       <div className="bg-gray-300 p-2 rounded-full">
                         <FaCreditCard />
                       </div>
-                      <div className="text-slate-700 font-semibold">
-                        Limit:{" "}
-                        {showBalance
-                          ? `R$ ${parseFloat(card.limit).toFixed(2)}`
-                          : "•••••"}
+                      <div>
+                        <span className="text-xs text-gray-600">
+                          Current Invoice:
+                        </span>
+                        <p>
+                          {showBalance
+                            ? `R$ ${cardTotals[card.id]?.toFixed(2) ?? "0.00"}`
+                            : "•••••"}
+                        </p>
                       </div>
                     </div>
 
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-gray-600 text-right">
+                      <div className="text-slate-700 text-sm">
+                        {showBalance ? (
+                          <p>
+                            <span className="font-semibold">
+                              R${" "}
+                              {parseFloat(card.currentLimit).toFixed(2)}
+                            </span>
+                          </p>
+                        ) : (
+                          <span className="font-semibold">•••••</span>
+                        )}
+                      </div>
                       <p className={`${highlightColor}`}>
                         {isClosed
                           ? `Due: ${card.dueDay}`
