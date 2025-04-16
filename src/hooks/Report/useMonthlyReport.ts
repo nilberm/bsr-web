@@ -1,6 +1,5 @@
 import { api } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 
 type Transaction = {
   id: string;
@@ -8,6 +7,7 @@ type Transaction = {
   description: string;
   amount: number;
   date: string;
+  isPaid: boolean;
   category: {
     id: string;
     name: string;

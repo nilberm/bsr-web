@@ -10,6 +10,7 @@ type Transaction = {
   description: string;
   amount: number;
   date: string;
+  isPaid: boolean;
   category: {
     id: string;
     name: string;
@@ -105,7 +106,7 @@ export default function TransactionList({ transactions }: Props) {
                     >
                       {formattedAmount}
                     </p>
-                    <span className="text-xs text-gray-400">done</span>
+                    <span className="text-xs text-gray-400">{transaction.isPaid ? "paid" : "not paid"}</span>
                   </div>
                 </div>
               );

@@ -12,7 +12,7 @@ export default function Report() {
   const initialMonthIndex = new Date().getMonth();
   const [selectedMonthIndex, setSelectedMonthIndex] =
     useState(initialMonthIndex);
-  const selectedMonth = selectedMonthIndex + 1;
+  const selectedMonth = selectedMonthIndex;
 
   const { data, isLoading, error } = useMonthlyReport(
     selectedMonth,
@@ -50,9 +50,7 @@ export default function Report() {
 
       {data && (
         <MonthlySummaryBar
-          earnings={data.totalEarnings}
-          expenses={data.totalExpenses}
-          balance={data.balance}
+          data={data}
         />
       )}
     </main>
