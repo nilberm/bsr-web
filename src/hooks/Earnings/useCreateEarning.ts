@@ -1,5 +1,5 @@
 import { api } from "@/services/api";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface CreateEarningData {
   description: string;
@@ -10,9 +10,19 @@ interface CreateEarningData {
 }
 
 export function useCreateEarning(onSuccessCallback?: () => void) {
+  const queryClient = useQueryClient();
+
   const { mutate: createEarning, isPending: loading } = useMutation({
     mutationFn: (data: CreateEarningData) => api.post("/earnings", data),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["cards"] });
+
+      const date = variables.date ? new Date(variables.date) : new Date();
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+      queryClient.invalidateQueries({ queryKey: ["monthly-report", month, year] });
+
       onSuccessCallback?.();
     },
     onError: (error) => {

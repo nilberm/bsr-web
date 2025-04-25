@@ -1,5 +1,5 @@
 import { api } from "@/services/api";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface CreateExpenseData {
   description: string;
@@ -14,9 +14,19 @@ interface CreateExpenseData {
 }
 
 export function useCreateExpense(onSuccessCallback?: () => void) {
+  const queryClient = useQueryClient();
+
   const { mutate: createExpense, isPending: loading } = useMutation({
     mutationFn: (data: CreateExpenseData) => api.post("/expenses", data),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["cards"] });
+
+      const date = variables.date ? new Date(variables.date) : new Date();
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+      queryClient.invalidateQueries({ queryKey: ["monthly-report", month, year] });
+
       onSuccessCallback?.();
     },
     onError: (error) => {
